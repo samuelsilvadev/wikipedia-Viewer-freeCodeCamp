@@ -1,3 +1,4 @@
+@import '_variables';
 @import '_general';
 
 .container {
@@ -7,13 +8,14 @@
 	justify-content: center;
 	height: inherit;
 	text-align: center;
-	color: #ff5252;
+	color: $secondary-color;
 	&__title{
 		font-size: 5rem;
+		text-transform: uppercase;
 	}
 
 	&__sub-title {
-		font-size: 1.3rem;
+		font-size: 1.3rem;		
 	}
 }
 
@@ -22,8 +24,8 @@
     margin-right: auto;
     width: 40%;
     &__field {
-		background-color: #455a64;
-		border: 3px solid #FF5252; 
+		background-color: $main-color;
+		border: 3px solid $secondary-color; 
 		color: #fff;       
 		font-size: 1rem;
         height: 5vh;
