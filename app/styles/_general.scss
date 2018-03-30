@@ -1,0 +1,20 @@
+input:focus,
+select:focus,
+textarea:focus,
+button:focus {
+    outline: none;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+	box-sizing: border-box;
+	font-family: 'Open Sans Condensed', sans-serif;
+}
+
+body {
+    background-color: #455a64;
+    height: 100vh;
+    overflow: hidden;
+    width: 100%;
+}
