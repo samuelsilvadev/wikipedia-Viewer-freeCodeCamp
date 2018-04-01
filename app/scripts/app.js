@@ -7,17 +7,34 @@
 	const $container = $('.js-container');
 	const $jsSearchForm = $('.js-search-form');
 	const $jsSearchField = $('.js-search-field');
-
-	$jsSearchForm.addEventListener('submit', (e) => {
+	const $jsContainerResults = $('.js-results-search');
+	const createHTMLSearchresults = data => {
+		if (data && data.search && Array.isArray(data.search)) {
+			$jsContainerResults.innerHTML = '';
+			$jsContainerResults.innerHTML = data.search.map(result => 
+				`
+				<div class="article">
+					<header>
+						<h4 class="article__title">${result.title}</h4>
+					</header>	
+					<p class="article__sub-title">${result.snippet}</p>
+				</div>
+				`
+			).join('');
+		}
+	};
+	const handleSubmitSearchForm = e => {
 		e.preventDefault();
 		if ($jsSearchField.value) {
 			wiki.searchSomething($jsSearchField.value)
-				.then(response => {					
+				.then(response => {
 					if (response.data.error) {
 						throw new Error(`Network response was not ok: ${response.data.error.info}`);
 					}
 					console.log(response.data.query);
+					createHTMLSearchresults(response.data.query);
 				});
 		}
-	});
+	};
+	$jsSearchForm.addEventListener('submit', handleSubmitSearchForm);
 })();
