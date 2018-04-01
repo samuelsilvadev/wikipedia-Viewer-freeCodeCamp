@@ -5,11 +5,15 @@
 	const wiki = require('./services/wikipedia');
 
 	const $container = $('.js-container');
+	const $containerTitles = $('.js-container-titles');
 	const $jsSearchForm = $('.js-search-form');
 	const $jsSearchField = $('.js-search-field');
 	const $jsContainerResults = $('.js-results-search');
+	
 	const createHTMLSearchresults = data => {
 		if (data && data.search && Array.isArray(data.search)) {
+			$container.style.height = '15vh';
+			$containerTitles.classList.add('hide');
 			$jsContainerResults.innerHTML = '';
 			$jsContainerResults.innerHTML = data.search.map(result => 
 				`
