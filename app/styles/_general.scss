@@ -8,13 +8,18 @@ button:focus {
 * {
     margin: 0;
     padding: 0;
-	box-sizing: border-box;
-	font-family: 'Open Sans Condensed', sans-serif;
+    box-sizing: border-box;
+    font-family: 'Open Sans Condensed', sans-serif;
 }
 
 body {
-    background-color: $main-color;
-    height: 100vh;
-    overflow: hidden;
-    width: 100%;
+    background-color: $secondary-color;
+}
+
+.hide {
+    display: none;
+}
+
+.show {
+    display: block;
 }
