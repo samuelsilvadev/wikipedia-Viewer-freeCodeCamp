@@ -2,16 +2,16 @@
 @import '_general';
 .container {
     align-content: center;
-	background-color: $main-color;
-	color: $secondary-color;
+    background-color: $main-color;
+    color: $secondary-color;
     display: flex;
     flex-direction: column;
-    height: 100vh;    
+    height: 100vh;
     justify-content: center;
-	overflow: hidden;	
+    overflow: hidden;
     text-align: center;
-	transition: all .5s;
-	width: 100%;
+    transition: all .5s;
+    width: 100%;
     &__title {
         font-size: 5rem;
         text-transform: uppercase;
@@ -39,15 +39,13 @@
 }
 
 .results-search {
-    margin-left: auto;
-    margin-right: auto;
+    left: calc((100% - 40%) / 2);
+    max-height: 85vh;    
+    overflow-y: scroll;
+    position: absolute;
     text-align: left;
-	width: 40%;    
-	max-height: 85vh;
-	overflow-y: scroll;
-	position: absolute;
-	top: 15vh;
-	left: calc((100% - 40%) / 2);
+    top: 15vh;
+    width: 40%;
     .article {
         background-color: $text-main-color;
         border-left: 5px solid $secondary-color;
@@ -59,7 +57,7 @@
 @media (max-width: 520px) {
     .search,
     .results-search {
-		width: 90%;
-		left: calc((100% - 90%) / 2);
+        width: 90%;
+        left: calc((100% - 90%) / 2);
     }
 }

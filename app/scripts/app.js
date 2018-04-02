@@ -9,13 +9,13 @@
 	const $jsSearchForm = $('.js-search-form');
 	const $jsSearchField = $('.js-search-field');
 	const $jsContainerResults = $('.js-results-search');
-	
+
 	const createHTMLSearchresults = data => {
 		if (data && data.search && Array.isArray(data.search)) {
 			$container.style.height = '15vh';
 			$containerTitles.classList.add('hide');
 			$jsContainerResults.innerHTML = '';
-			$jsContainerResults.innerHTML = data.search.map(result => 
+			$jsContainerResults.innerHTML = data.search.map(result =>
 				`
 				<div class="article">
 					<header>
@@ -40,5 +40,13 @@
 				});
 		}
 	};
+	const handleKeyDownSearchField = e => {
+		if (e.target.value.length === 0) {
+			$containerTitles.classList.remove('hide');
+			$container.style.height = '100vh';
+			$jsContainerResults.innerHTML = '';
+		}
+	};
 	$jsSearchForm.addEventListener('submit', handleSubmitSearchForm);
+	$jsSearchField.addEventListener('keyup', handleKeyDownSearchField)
 })();
