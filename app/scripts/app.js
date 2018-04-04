@@ -2,6 +2,7 @@
 	'use strict';
 
 	const $ = require('./dom-utils').$;
+	const $$ = require('./dom-utils').$$;
 	const wiki = require('./services/wikipedia');
 
 	const $container = $('.js-container');
@@ -17,7 +18,7 @@
 			$jsContainerResults.innerHTML = '';
 			$jsContainerResults.innerHTML = data.search.map(result =>
 				`
-				<div class="article">
+				<div class="article js-article">
 					<header>
 						<h4 class="article__title">${result.title}</h4>
 					</header>	
@@ -25,6 +26,7 @@
 				</div>
 				`
 			).join('');
+			addEventInArticles();
 		}
 	};
 	const handleSubmitSearchForm = e => {
@@ -47,6 +49,21 @@
 			$jsContainerResults.innerHTML = '';
 		}
 	};
+	const handleClickWikipediaLink = title => {
+		const WIKIPEDIA_BASE = 'https://en.wikipedia.org/wiki/'
+		window.open(`${WIKIPEDIA_BASE}${title}`, '_blank');
+	};
+	const addEventInArticles = e => {
+		const $articles = $$('.js-article');
+		const arrArticles = [...$articles];
+		arrArticles.forEach(article => 
+			article
+				.addEventListener(
+					'click',
+					handleClickWikipediaLink.bind(null, article.children[0].children[0].innerText)
+				)
+		);
+	}
 	$jsSearchForm.addEventListener('submit', handleSubmitSearchForm);
 	$jsSearchField.addEventListener('keyup', handleKeyDownSearchField)
 })();

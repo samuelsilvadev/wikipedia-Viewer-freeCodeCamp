@@ -48,7 +48,8 @@
     width: 40%;
     .article {
         background-color: $text-main-color;
-        border-left: 5px solid $secondary-color;
+		border-left: 5px solid $secondary-color;
+		cursor: pointer;
         margin-top: 1%;
         padding: 5%;
     }
