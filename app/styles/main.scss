@@ -22,12 +22,15 @@
 }
 
 .search {
+    align-items: center;
+    display: flex;
     margin-left: auto;
     margin-right: auto;
     width: 40%;
     &__field {
         background-color: $main-color;
         border: 3px solid $secondary-color;
+        border-right: none;
         color: $text-main-color;
         font-size: 1rem;
         height: 5vh;
@@ -36,11 +39,26 @@
             border: none;
         }
     }
+    &__icons {
+        display: flex;
+        align-items: center;
+        border: 3px solid $secondary-color;
+        border-left: none;
+        height: 5vh;
+        width: 6vh;
+    }
+}
+
+.icon {
+	cursor: pointer;
+    &__random {
+        padding-left: .5vh;
+    }
 }
 
 .results-search {
     left: calc((100% - 40%) / 2);
-    max-height: 85vh;    
+    max-height: 85vh;
     overflow-y: scroll;
     position: absolute;
     text-align: left;
@@ -48,8 +66,8 @@
     width: 40%;
     .article {
         background-color: $text-main-color;
-		border-left: 5px solid $secondary-color;
-		cursor: pointer;
+        border-left: 5px solid $secondary-color;
+        cursor: pointer;
         margin-top: 1%;
         padding: 5%;
     }

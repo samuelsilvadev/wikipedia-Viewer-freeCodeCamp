@@ -8,6 +8,9 @@
 	<title>Home - WikiCamp</title>
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300" defer>
 	<link rel="stylesheet" href="./dist/styles/styles.css">
+
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.9/css/all.css" integrity="sha384-5SOiIsAziJl6AWe0HWRKTXlfcSHKmYV4RBF18PPJ173Kzn7jzMyFuTtk8JA7QQG1"
+	 crossorigin="anonymous" defer>
 </head>
 
 <body>
@@ -19,9 +22,13 @@
 		<section>
 			<form class="search js-search-form">
 				<input class="search__field js-search-field" type="search" name="search-something" autofocus autocomplete="off">
+				<span class="search__icons icon">
+					<i class="fas fa-search icon__search js-icon-search"></i>
+					<i class="fas fa-random icon__random js-icon-random"></i>
+				</span>
 			</form>
 		</section>
-		<section class="results-search js-results-search">			
+		<section class="results-search js-results-search">
 		</section>
 	</main>
 	<script src="./dist/scripts/app.js" defer></script>

@@ -10,6 +10,8 @@
 	const $jsSearchForm = $('.js-search-form');
 	const $jsSearchField = $('.js-search-field');
 	const $jsContainerResults = $('.js-results-search');
+	const $jsIconSearch = $('.js-icon-search');
+	const $jsIconRandom = $('.js-icon-random');
 
 	const createHTMLSearchresults = data => {
 		if (data && data.search && Array.isArray(data.search)) {
@@ -56,14 +58,20 @@
 	const addEventInArticles = e => {
 		const $articles = $$('.js-article');
 		const arrArticles = [...$articles];
-		arrArticles.forEach(article => 
+		arrArticles.forEach(article =>
 			article
 				.addEventListener(
 					'click',
 					handleClickWikipediaLink.bind(null, article.children[0].children[0].innerText)
 				)
 		);
-	}
+	};
+	const handleClickRandom = e => {
+		const WIKIPEDIA_RANDOM = 'https://en.wikipedia.org/wiki/Special:Random'
+		window.open(`${WIKIPEDIA_RANDOM}`, '_blank');
+	};
 	$jsSearchForm.addEventListener('submit', handleSubmitSearchForm);
 	$jsSearchField.addEventListener('keyup', handleKeyDownSearchField)
+	$jsIconSearch.addEventListener('click', handleSubmitSearchForm);
+	$jsIconRandom.addEventListener('click', handleClickRandom);
 })();
