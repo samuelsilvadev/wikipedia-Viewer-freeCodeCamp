@@ -14,66 +14,59 @@ const plumber = require('gulp-plumber');
 const browserify = require('browserify');
 const source = require('vinyl-source-stream');
 const babel = require('gulp-babel');
-const runSequence = require('run-sequence');
 
 gulp.task('browserSync', () => {
 	browserSync({
 		server: {
-			baseDir: "./app/"
+			baseDir: "./dist/"
 		},
 		notify: false
 	});
 });
 
-gulp.task('images', (tmp) => {
-	return gulp.src(['app/images/**/*'])
+gulp.task('images', () => {
+	return gulp.src(['src/images/**/*', '!src/images/README'])
 		.pipe(plumber())
-		.pipe(imagemin({ optimizationLevel: 5, progressive: true, interlaced: true }))
-		.pipe(gulp.dest('app/dist/images/'));
+		.pipe(gulp.dest('dist/images/'));
 });
 
-gulp.task('images-deploy', () => {
-	return gulp.src(['app/images/**/*', '!app/images/README'])
+gulp.task('images-deploy', (tmp) => {
+	return gulp.src(['src/images/**/*'])
 		.pipe(plumber())
-		.pipe(gulp.dest('app/dist/images/'));
+		.pipe(imagemin({ optimizationLevel: 5, progressive: true, interlaced: true }))
+		.pipe(gulp.dest('dist/images/'));
 });
 
 gulp.task('scripts', () => {
-	return browserify(['app/scripts/app.js'])
+	return browserify(['src/scripts/app.js'])
 		.bundle()
 		.pipe(source('app.js'))
 		.pipe(plumber())
 		.on('error', console.error)
-		.pipe(gulp.dest('app/dist/scripts'))
+		.pipe(gulp.dest('dist/scripts'))
 		.pipe(browserSync.reload({ stream: true }));
 });
 
 gulp.task('scripts-deploy', () => {
-	return browserify(['app/scripts/app.js'])
+	return browserify(['src/scripts/app.js'])
 		.bundle()
 		.pipe(source('app.js'))
 		.pipe(plumber())
-		.pipe(gulp.dest('app/dist/scripts'));
+		.pipe(gulp.dest('dist/scripts'));
 });
 
 gulp.task('scripts-deploy-babel', () => {
-	return gulp.src('app/dist/scripts/app.js')
+	return gulp.src('dist/scripts/app.js')
 		.pipe(babel({
 			presets: ['env']
 		}))
+		.pipe(uglify())
 		.pipe(gulp.dest(file => file.base));
 	}
 );
 
-gulp.task('scripts-deploy-end', () => {
-	return gulp.src(['app/dist/scripts/app.js'])
-		.pipe(plumber())		
-		.pipe(uglify())
-		.pipe(gulp.dest(file => file.base));
-});
-
 gulp.task('styles', () => {
-	return gulp.src('app/styles/main.scss')
+	return gulp.src('src/styles/main.scss')
 		.pipe(plumber({
 			errorHandler: (err) => {
 				console.log(err);
@@ -84,7 +77,7 @@ gulp.task('styles', () => {
 		.pipe(sass({
 			errLogToConsole: true,
 			includePaths: [
-				'app/styles/'
+				'src/styles/'
 			]
 		}))
 		.pipe(autoprefixer({
@@ -94,16 +87,16 @@ gulp.task('styles', () => {
 		.on('error', console.error)
 		.pipe(concat('styles.css'))
 		.pipe(sourceMaps.write())
-		.pipe(gulp.dest('app/dist/styles'))
+		.pipe(gulp.dest('dist/styles'))
 		.pipe(browserSync.reload({ stream: true }));
 });
 
 gulp.task('styles-deploy', () => {
-	return gulp.src('app/styles/init.scss')
+	return gulp.src('src/styles/main.scss')
 		.pipe(plumber())
 		.pipe(sass({
 			includePaths: [
-				'app/styles/',
+				'src/styles/',
 			]
 		}))
 		.pipe(autoprefixer({
@@ -111,57 +104,70 @@ gulp.task('styles-deploy', () => {
 		}))
 		.pipe(concat('styles.css'))
 		.pipe(minifyCSS())
-		.pipe(gulp.dest('app/dist/styles'));
+		.pipe(gulp.dest('dist/styles'));
 });
 
 gulp.task('html', () => {
-	return gulp.src('app/*.html')
+	return gulp.src('src/*.html')
 		.pipe(plumber())
 		.pipe(browserSync.reload({ stream: true }))
-		.on('error', console.error);
+		.on('error', console.error)
+		.pipe(gulp.dest('dist'));
 });
 
-gulp.task('html-deploy', () => {
-	gulp.src('app/*')
+gulp.task('html-deploy', gulp.series((done) => {
+	gulp.src('src/*')
 		.pipe(plumber())
-		.pipe(gulp.dest('app/dist'));
+		.pipe(gulp.dest('dist'));
 
-	gulp.src('app/.*')
+	gulp.src('src/fonts/**/*')
 		.pipe(plumber())
-		.pipe(gulp.dest('app/dist'));
+		.pipe(gulp.dest('dist/fonts'));
 
-	gulp.src('app/fonts/**/*')
+	gulp.src(['src/styles/*.css', '!src/styles/styles.css'])
 		.pipe(plumber())
-		.pipe(gulp.dest('app/dist/fonts'));
+		.pipe(gulp.dest('dist/styles'));
+	
+	done();
+}));
 
-	gulp.src(['app/styles/*.css', '!app/styles/styles.css'])
-		.pipe(plumber())
-		.pipe(gulp.dest('app/dist/styles'));
+gulp.task('clean',
+	shell.task([
+		'rm -rf ./dist'
+	])
+);
+
+gulp.task('scaffold',
+	shell.task([
+		'mkdir ./dist',
+		'mkdir ./dist/fonts',
+		'mkdir ./dist/images',
+		'mkdir ./dist/scripts',
+		'mkdir ./dist/styles'
+	])
+);
+
+gulp.task('default', 
+		gulp.series('clean', 'scaffold',
+		gulp.parallel('browserSync', 'html', 'scripts', 'styles')
+	), () => {
+	gulp.watch('src/scripts/**', gulp.series('scripts'));
+	gulp.watch('src/styles/**', gulp.series('styles'));
+	gulp.watch('src/images/**', gulp.series('images'));
+	gulp.watch('src/*.html', gulp.series('html'));
 });
 
-gulp.task('clean', () => {
-	return shell.task([
-		'rm -rf ./app/dist'
-	]);
-});
 
-gulp.task('scaffold', () => {
-	return shell.task([
-		'mkdir app/dist',
-		'mkdir app/dist/fonts',
-		'mkdir app/dist/images',
-		'mkdir app/dist/scripts',
-		'mkdir app/dist/styles'
-	]);
-});
-
-gulp.task('default', ['browserSync', 'scripts', 'styles'], () => {	
-	gulp.watch('app/scripts/**', ['scripts']);
-	gulp.watch('app/styles/**', ['styles']);
-	gulp.watch('app/images/**', ['images']);
-	gulp.watch('app/*.html', ['html']);
-});
-
-gulp.task('deploy', () => {
-	runSequence('clean', 'scaffold', 'scripts-deploy', 'scripts-deploy-babel', 'scripts-deploy-end', 'styles-deploy', 'images-deploy', 'html-deploy')
-});
+gulp.task('deploy', 
+	gulp.series([
+		'clean',
+		'scaffold',
+		'scripts-deploy',
+		'scripts-deploy-babel',	
+		'styles-deploy',
+		'images-deploy',
+		'html-deploy'], (done) => {
+			done();
+		}
+	)
+);

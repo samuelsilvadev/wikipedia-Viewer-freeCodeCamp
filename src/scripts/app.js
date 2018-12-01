@@ -39,7 +39,6 @@
 					if (response.data.error) {
 						throw new Error(`Network response was not ok: ${response.data.error.info}`);
 					}
-					console.log(response.data.query);
 					createHTMLSearchresults(response.data.query);
 				});
 		}
